@@ -25,4 +25,6 @@ public interface IUserService {
     void deteleUser(Integer userId);
 
     List<User> searchUser(String query);
+
+    User findUserByJwt(String jwt);
 }

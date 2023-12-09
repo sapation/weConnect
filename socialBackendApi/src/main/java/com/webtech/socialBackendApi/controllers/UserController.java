@@ -60,4 +60,9 @@ public class UserController {
     public List<User> searchUserHandler(@RequestParam("query") String query) {
         return _userService.searchUser(query);
     }
+
+    @GetMapping("api/users/profile")
+    public User getUserFromToken(@RequestHeader("Authorization") String jwt) {
+        return _userService.findUserByJwt(jwt);
+    }
 }

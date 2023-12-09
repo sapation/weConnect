@@ -3,20 +3,29 @@ package com.webtech.socialBackendApi.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 public class JwtProvider {
-    private static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.JWT_SECRET_KEY.getBytes());
+    private static final SecretKey key = Keys.hmacShaKeyFor(JwtConstant.JWT_SECRET_KEY.getBytes());
 
     public static String generateToken(Authentication authentication) {
-        return Jwts.builder()
-                .setIssuer("Webtechsolution").setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+86400000))
-                .claim("email", authentication.name())
-                .compact();
+        try{
+            return Jwts.builder()
+                    .setIssuer("Webtechsolution").setIssuedAt(new Date())
+                    .setExpiration(new Date(new Date().getTime()+86400000))
+                    .claim("email", authentication.getName())
+                    .signWith(key)
+                    .compact();
+        } catch (Throwable t) {
+            log.error("Failure during static initialization", t);
+            throw t;
+        }
 
     }
 
@@ -24,7 +33,7 @@ public class JwtProvider {
         //Bearer token
         jwt = jwt.substring(7);
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key).build().parseClaimsJwt(jwt).getBody();
+                .setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
         return String.valueOf(claims.get("email"));
     }

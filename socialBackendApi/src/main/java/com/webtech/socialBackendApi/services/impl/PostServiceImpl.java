@@ -85,4 +85,9 @@ public class PostServiceImpl implements IPostService {
 
         return _postRepository.save(post);
     }
+
+    @Override
+    public void save(Post post) {
+        _postRepository.save(post);
+    }
 }

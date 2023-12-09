@@ -1,10 +1,9 @@
 package com.webtech.socialBackendApi.services.impl;
 
+import com.webtech.socialBackendApi.config.JwtProvider;
 import com.webtech.socialBackendApi.models.User;
 import com.webtech.socialBackendApi.repository.IUserRepository;
 import com.webtech.socialBackendApi.services.IUserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,5 +81,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> searchUser(String query) {
         return _userRepository.searchUser(query);
+    }
+
+    @Override
+    public User findUserByJwt(String jwt) {
+        String email = JwtProvider.getEmailFromJwtToken(jwt);
+        return _userRepository.findByEmail(email);
     }
 }

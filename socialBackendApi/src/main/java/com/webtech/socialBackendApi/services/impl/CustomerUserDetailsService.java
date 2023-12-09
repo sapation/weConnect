@@ -14,8 +14,12 @@ import java.util.List;
 
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
-    @Autowired
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
+
+    public CustomerUserDetailsService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
